@@ -13,6 +13,9 @@ class App extends Component {
         <p className="App-intro">
           You need a valid JWT to see this site
         </p>
+        <p className="App-intro">
+          <a target='_blank' href="https://gated-sites-demo-login-site.netlify.com/">Back to login portal</a>
+        </p>
       </div>
     );
   }
