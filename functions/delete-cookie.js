@@ -4,7 +4,7 @@ import util from 'util'
 
 exports.handler = (event, context, callback) => {
 
-  const params = event.queryStringParameters
+  const params = event.queryStringParameters || {}
   const redirectUrl = params.url
   const authToken = params.token
 
@@ -18,56 +18,25 @@ exports.handler = (event, context, callback) => {
     console.log(err.name)
     console.log(err.message)
   }
-  var hour = 3600000;
-  var twoWeeks = 14 * 24 * hour
-  const myCookie = cookie.serialize('nf_jwt', authToken, {
+
+  const myCookie = cookie.serialize('nf_jwt', null, {
     secure: true,
     httpOnly: true,
     path: "/",
-    maxAge: twoWeeks,
+    maxAge: -1,
     // domain: 'gated-sites-demo-site1.netlify.com'
     // expires: expiresValue
   })
 
-  let decodedToken
-  try {
-    decodedToken = jwt.decode(params.token, { complete: true })
-    console.log('decodedToken')
-    console.log(util.inspect(decodedToken, false, null))
-  } catch (e) {
-    console.log(e)
-  }
-
   const html = `
   <html lang="en">
     <head>
-    <meta charset="utf-8">
-    <style>
-      h1 { color: #73757d; }
-      body { width: 100%; }
-    </style>
+      <meta charset="utf-8">
     </head>
     <body>
       <noscript>
         <meta http-equiv="refresh" content="0; url=${process.env.URL}" />
       </noscript>
-      <h1>Set Cookie</h1>
-
-      <p>Cookie is now set. check dev tools for httpOnly cookies</p>
-
-      <h2>Cookie value:</h2>
-      <code>
-        <pre>${myCookie}</pre>
-      </code>
-
-      <h2>Json web token:</h2>
-      <code>
-        <pre>${JSON.stringify(decodedToken, null, 2)}</pre>
-      </code>
-
-      <a href="${process.env.URL}">
-        Try to go to ${process.env.URL}
-      </a>
     </body>
     <script>
       function redirect(url) {
@@ -101,7 +70,7 @@ exports.handler = (event, context, callback) => {
       }
 
       setTimeout(function(){
-        redirect(${JSON.stringify(redirectUrl)})
+        redirect('https://gated-sites-demo-login-site.netlify.com/')
       }, 0)
     </script>
   </html>`;
@@ -116,7 +85,7 @@ exports.handler = (event, context, callback) => {
     "body": html
   }
 
-  console.log(`${process.env.URL} Set`, cookieResponse)
+  console.log(`${process.env.URL} Delete`, cookieResponse)
 
   // set cookie and redirect
   return callback(null, cookieResponse);
