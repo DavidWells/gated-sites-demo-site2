@@ -1,2 +1,2 @@
 /* /:splat 200! Role=*
-/* /.netlify/functions/redirect 302!
+/* https://gated-sites-demo-login-site.netlify.com/?site=https://gated-sites-demo-site2.netlify.com/:splat 301!
