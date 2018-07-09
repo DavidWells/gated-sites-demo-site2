@@ -24,8 +24,6 @@ exports.handler = (event, context, callback) => {
     httpOnly: true,
     path: "/",
     maxAge: -1,
-    // domain: 'gated-sites-demo-site1.netlify.com'
-    // expires: expiresValue
   })
 
   const html = `
