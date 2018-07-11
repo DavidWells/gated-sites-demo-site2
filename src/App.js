@@ -10,9 +10,15 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Gated Site 2</h1>
         </header>
+        
         <p className="App-intro">
           You need a valid JWT to see this site
         </p>
+
+        <p className="App-intro">
+          <a href="/.netlify/functions/delete-cookie">Clear site cookie</a>
+        </p>
+
         <p className="App-intro">
           <a target='_blank' href="https://gated-sites-demo-login-site.netlify.com/">Back to login portal</a>
         </p>
