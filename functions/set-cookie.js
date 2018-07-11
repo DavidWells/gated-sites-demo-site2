@@ -5,7 +5,7 @@ import util from 'util'
 exports.handler = (event, context, callback) => {
 
   const params = event.queryStringParameters
-  const redirectUrl = params.url
+  const redirectUrl = params.url || process.env.URL
   const authToken = params.token
 
   // invalid token - synchronous
@@ -38,70 +38,19 @@ exports.handler = (event, context, callback) => {
     console.log(e)
   }
 
+  // Do redirects via html
   const html = `
   <html lang="en">
     <head>
-    <meta charset="utf-8">
-    <style>
-      h1 { color: #73757d; }
-      body { width: 100%; }
-    </style>
+      <meta charset="utf-8">
     </head>
     <body>
       <noscript>
-        <meta http-equiv="refresh" content="0; url=${process.env.URL}" />
+        <meta http-equiv="refresh" content="0; url=${redirectUrl}" />
       </noscript>
-      <h1>Set Cookie</h1>
-
-      <p>Cookie is now set. check dev tools for httpOnly cookies</p>
-
-      <h2>Cookie value:</h2>
-      <code>
-        <pre>${myCookie}</pre>
-      </code>
-
-      <h2>Json web token:</h2>
-      <code>
-        <pre>${JSON.stringify(decodedToken, null, 2)}</pre>
-      </code>
-
-      <a href="${process.env.URL}">
-        Try to go to ${process.env.URL}
-      </a>
     </body>
     <script>
-      function redirect(url) {
-        var dom = window.document.createElement('form');
-
-        var parts = url.split('?');
-        var url_ = parts[0], params = parts[1] || '';
-        var paramlist = params.split('&');
-
-        dom.setAttribute('method', 'get');
-        dom.setAttribute('action', url_);
-        dom.style.display = 'none';
-        dom.style.visibility = 'hidden';
-
-        var e, kv, k, v;
-        for (var i = 0; i < paramlist.length; ++i) {
-          kv = paramlist[i].split('=');
-          k = kv[0];
-          v = kv[1];
-          e = window.document.createElement('input');
-
-          e.setAttribute('type', 'hidden');
-          e.setAttribute('name', decodeURIComponent(k));
-          e.setAttribute('value', decodeURIComponent(v));
-
-          dom.appendChild(e);
-        }
-
-        window.document.body.appendChild(dom);
-        dom.submit();
-      }
-
       setTimeout(function(){
-        // redirect(${JSON.stringify(redirectUrl)})
         window.location.href = ${JSON.stringify(redirectUrl)}
       }, 0)
     </script>

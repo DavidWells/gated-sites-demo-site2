@@ -6,7 +6,7 @@ exports.handler = (event, context, callback) => {
 
   console.log('event', event)
   const params = event.queryStringParameters || {}
-  const redirectUrl = params.url
+  const redirectUrl = event.headers.referer
   const authToken = params.token
 
   // invalid token - synchronous
